@@ -1,76 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>RITMO INSTRUMENTOS - Loja de Pandeiros</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
-  <script>
-    Parse.initialize("noV3fZqC5tLPQxlls7LGis1Qx3zKVKjUEGZ8q2I5", "VOOmw8koyC92ZjJmMd3TRqIQuYmOQhUJ9Z2geQMy");
-    Parse.serverURL = "https://parseapi.back4app.com/";
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RITMO INSTRUMENTOS - Loja de Pandeiros</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+    <script src="main.js"></script>
 </head>
 
 <body>
-  <h1>RITMO INSTRUMENTOS - Loja de Pandeiros</h1>   
+    <h1>RITMO INSTRUMENTOS - Loja de Pandeiros</h1>
 
-  <label for="wood">Escolha o tipo de madeira:</label>
-  <select id="wood">
-    <option value="Imbuia">Imbuia</option>
-    <option value="Cedro">Cedro</option>
-  </select>
+    <form id="orderForm">
+        <label for="woodType">Tipo de Madeira:</label>
+        <select id="woodType" name="woodType">
+            <option value="imbuia">Imbuia</option>
+            <option value="cedro">Cedro</option>
+        </select><br>
 
-  <label for="jingles">Escolha o número de platinelas:</label>
-  <select id="jingles">
-    <option value="5">5</option>
-    <option value="6">6</option>
-  </select>
+        <label for="jingles">Platinelas:</label>
+        <select id="jingles" name="jingles">
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select><br>
 
-  <label for="head">Escolha o material do tambor:</label>
-  <select id="head">
-    <option value="Nylon">Nylon</option>
-    <option value="Couro">Couro</option>
-  </select>
+        <label for="headMaterial">Material da Pele:</label>
+        <select id="headMaterial" name="headMaterial">
+            <option value="nylon">Nylon</option>
+            <option value="couro">Couro</option>
+        </select><br>
 
-  <label for="price">Preço:</label>
-  <input id="price" type="number" placeholder="Preço"/>
+        <label for="price">Preço:</label>
+        <input type="text" id="price" name="price"><br>
 
-  <label for="orderDate">Data de Recebimento do Pedido:</label>
-  <input id="orderDate" type="date"/>
+        <label for="orderDate">Data de Recebimento:</label>
+        <input type="date" id="orderDate" name="orderDate"><br>
 
-  <label for="deliveryDate">Data de Previsão de Entrega:</label>
-  <input id="deliveryDate" type="date"/>
+        <label for="deliveryDate">Data de Previsão de Entrega:</label>
+        <input type="date" id="deliveryDate" name="deliveryDate"><br>
 
-  <button id="submitOrderButton">Enviar Pedido</button>
+        <button id="submitOrderButton">Enviar Pedido</button>
+    </form>
 
-  <script>
-    async function submitOrder() {
-      let Order = Parse.Object.extend("Order");
-      let order = new Order();
+    <button id="viewOrdersButton">Verificar Pedidos</button>
 
-      order.set("wood", document.getElementById("wood").value);
-      order.set("jingles", parseInt(document.getElementById("jingles").value));
-      order.set("head", document.getElementById("head").value);
-      order.set("price", parseFloat(document.getElementById("price").value));
-      order.set("orderDate", new Date(document.getElementById("orderDate").value));
-      order.set("deliveryDate", new Date(document.getElementById("deliveryDate").value));
-
-      try {
-        order = await order.save();
-        if (order !== null) {
-          alert(`Pedido enviado com sucesso! ID do Pedido: ${order.id}`);
-        }
-      } catch (error) {
-        alert(`Erro ao enviar pedido: ${error.message}`);
-      }
-    }
-
-    document.getElementById("submitOrderButton").addEventListener("click", async function () {
-      submitOrder();
-    });
-  </script>
 </body>
 
 </html>
+
