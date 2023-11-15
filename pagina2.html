@@ -8,11 +8,7 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
 </head>
-<script>
-  Parse.initialize("noV3fZqC5tLPQxlls7LGis1Qx3zKVKjUEGZ8q2I5", "VOOmw8koyC92ZjJmMd3TRqIQuYmOQhUJ9Z2geQMy"); 
-  Parse.serverURL = "https://parseapi.back4app.com/";
-</script>
-  
+ 
 <body>
   Hello world
   <script src="script.js"></script>
@@ -47,6 +43,76 @@ async function createParseUser() {
     user = await user.save();
     if (user !== null) {
       
+      alert(
+        `New object created with success! ObjectId: ${
+          user.id
+        }, ${user.get("username")}`
+      );
+    }
+  } catch (error) {
+    alert(`Error: ${error.message}`);
+  }
+}
+
+
+document.getElementById("createButton").addEventListener("click", async function () {
+  createParseUser();
+});
+ </script>
+</html>
+
+------
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+</head>
+
+<body>
+  Hello world
+  <script src="script.js"></script>
+
+
+
+  <!--
+  This script places a badge on your repl's full-browser view back to your repl's cover
+  page. Try various colors for the theme: dark, light, red, orange, yellow, lime, green,
+  teal, blue, blurple, magenta, pink!
+  -->
+  <script src="https://replit.com/public/js/replit-badge-v2.js" theme="dark" position="bottom-right"></script>
+
+<h1>RITMO INSTRUMENTOS</h1>   
+<input id="username" type="text" placeholder="Username"/>
+<input id="email" type="email" placeholder="Email"/>
+<input id="password" type="password" placeholder="Password" />
+<button id="createButton">Create User</button>
+
+<a href="pagina2.html">LINK</a>
+
+
+</body>
+
+ <script>
+
+async function createParseUser() {
+
+  let user = new Parse.User();
+
+  user.set("username", document.getElementById("username").value);
+  user.set("email", document.getElementById("email").value);
+  user.set("password", document.getElementById("password").value);
+  try {
+
+    user = await user.save();
+    if (user !== null) {
+
       alert(
         `New object created with success! ObjectId: ${
           user.id
