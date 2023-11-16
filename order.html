@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +8,16 @@
     <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
     <script src="orders.js"></script>
 </head>
-
 <body>
     <h1>Verificar Pedidos</h1>
-
     <ul id="ordersList"></ul>
+    <button id="addOrderButton">Adicionar Pedido</button>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="orders.js"></script>
+    <script>
+        document.getElementById("addOrderButton").addEventListener("click", function () {
+            window.location.href = "index.html";
+        });
+    </script>
 </body>
-
 </html>
+
