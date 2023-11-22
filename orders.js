@@ -72,39 +72,94 @@ function editOrder(orderId) {
             const headOptions = ['Couro', 'Nylon'];
             const jinglesOptions = ['5', '6'];
 
-            let updatedWood = prompt(`Editar tipo de madeira (${woodOptions.join(', ')}):`, order.get("wood"));
-            let updatedHead = prompt(`Editar material do tambor (${headOptions.join(', ')}):`, order.get("head"));
-            let updatedJingles = prompt(`Editar quantidade de platinelas (${jinglesOptions.join(', ')}):`, order.get("jingles"));
-            let updatedPrice = parseFloat(prompt("Editar preço:", order.get("price")));
-            let updatedOrderDateInput = prompt("Editar data de recebimento (Formato: dd/mm/aaaa):", formatDate(order.get("orderDate")));
-            let updatedDeliveryDateInput = prompt("Editar data de previsão de entrega (Formato: dd/mm/aaaa):", formatDate(order.get("deliveryDate")));
+            const formContainer = document.createElement('div');
 
-            // Validando entradas e formatando datas
-            updatedWood = woodOptions.includes(updatedWood) ? updatedWood : order.get("wood");
-            updatedHead = headOptions.includes(updatedHead) ? updatedHead : order.get("head");
-            updatedJingles = jinglesOptions.includes(updatedJingles) ? updatedJingles : order.get("jingles");
+            const woodLabel = document.createElement('label');
+            woodLabel.textContent = 'Editar tipo de madeira:';
+            const woodSelect = document.createElement('select');
+            woodOptions.forEach(option => {
+                const woodOption = document.createElement('option');
+                woodOption.value = option.toLowerCase();
+                woodOption.textContent = option;
+                woodSelect.appendChild(woodOption);
+            });
+            woodSelect.value = order.get("wood");
+            woodLabel.appendChild(woodSelect);
 
-            const updatedOrderDateArray = updatedOrderDateInput.split('/');
-            const updatedDeliveryDateArray = updatedDeliveryDateInput.split('/');
+            const headLabel = document.createElement('label');
+            headLabel.textContent = 'Editar material do tambor:';
+            const headSelect = document.createElement('select');
+            headOptions.forEach(option => {
+                const headOption = document.createElement('option');
+                headOption.value = option.toLowerCase();
+                headOption.textContent = option;
+                headSelect.appendChild(headOption);
+            });
+            headSelect.value = order.get("head");
+            headLabel.appendChild(headSelect);
 
-            const updatedOrderDate = new Date(`${updatedOrderDateArray[2]}-${updatedOrderDateArray[1]}-${updatedOrderDateArray[0]}`);
-            const updatedDeliveryDate = new Date(`${updatedDeliveryDateArray[2]}-${updatedDeliveryDateArray[1]}-${updatedDeliveryDateArray[0]}`);
+            const jinglesLabel = document.createElement('label');
+            jinglesLabel.textContent = 'Editar quantidade de platinelas:';
+            const jinglesSelect = document.createElement('select');
+            jinglesOptions.forEach(option => {
+                const jinglesOption = document.createElement('option');
+                jinglesOption.value = option;
+                jinglesOption.textContent = option;
+                jinglesSelect.appendChild(jinglesOption);
+            });
+            jinglesSelect.value = order.get("jingles").toString();
+            jinglesLabel.appendChild(jinglesSelect);
 
-            if (isNaN(updatedOrderDate.getTime()) || isNaN(updatedDeliveryDate.getTime())) {
-                console.log('Datas inválidas');
-                return;
-            }
+            const priceLabel = document.createElement('label');
+            priceLabel.textContent = 'Editar preço:';
+            const priceInput = document.createElement('input');
+            priceInput.type = 'text';
+            priceInput.value = order.get("price").toString();
+            priceLabel.appendChild(priceInput);
 
-            const updatedData = {
-                "wood": updatedWood,
-                "head": updatedHead,
-                "jingles": updatedJingles,
-                "price": updatedPrice,
-                "orderDate": updatedOrderDate,
-                "deliveryDate": updatedDeliveryDate
-            };
+            const orderDateLabel = document.createElement('label');
+            orderDateLabel.textContent = 'Editar data de recebimento (Formato: dd/mm/aaaa):';
+            const orderDateInput = document.createElement('input');
+            orderDateInput.type = 'date';
+            orderDateInput.value = formatDate(order.get("orderDate"));
+            orderDateLabel.appendChild(orderDateInput);
 
-            updateOrder(orderId, updatedData);
+            const deliveryDateLabel = document.createElement('label');
+            deliveryDateLabel.textContent = 'Editar data de previsão de entrega (Formato: dd/mm/aaaa):';
+            const deliveryDateInput = document.createElement('input');
+            deliveryDateInput.type = 'date';
+            deliveryDateInput.value = formatDate(order.get("deliveryDate"));
+            deliveryDateLabel.appendChild(deliveryDateInput);
+
+            formContainer.appendChild(woodLabel);
+            formContainer.appendChild(headLabel);
+            formContainer.appendChild(jinglesLabel);
+            formContainer.appendChild(priceLabel);
+            formContainer.appendChild(orderDateLabel);
+            formContainer.appendChild(deliveryDateLabel);
+
+            const saveButton = document.createElement('button');
+            saveButton.textContent = 'Salvar Edição';
+            saveButton.addEventListener('click', () => {
+                const updatedData = {
+                    "wood": woodSelect.value,
+                    "head": headSelect.value,
+                    "jingles": parseInt(jinglesSelect.value),
+                    "price": parseFloat(priceInput.value),
+                    "orderDate": new Date(orderDateInput.value),
+                    "deliveryDate": new Date(deliveryDateInput.value)
+                };
+                updateOrder(orderId, updatedData);
+            });
+
+            formContainer.appendChild(saveButton);
+
+            const editForm = document.createElement('form');
+            editForm.appendChild(formContainer);
+
+            const ordersList = document.getElementById("ordersList");
+            ordersList.innerHTML = '';
+            ordersList.appendChild(editForm);
         })
         .catch(error => {
             console.log('Erro ao obter pedido para edição:', error.message);
@@ -118,10 +173,15 @@ async function updateOrder(orderId, updatedData) {
     try {
         const order = await query.get(orderId);
 
-        Object.keys(updatedData).forEach(key => {
-            order.set(key, updatedData[key]);
-        });
+        // Atualiza os campos do pedido com os novos dados
+        order.set("wood", updatedData.wood);
+        order.set("jingles", updatedData.jingles);
+        order.set("head", updatedData.head);
+        order.set("price", updatedData.price);
+        order.set("orderDate", updatedData.orderDate);
+        order.set("deliveryDate", updatedData.deliveryDate);
 
+        // Salva as alterações no pedido
         await order.save();
         alert(`Pedido ID: ${orderId} foi atualizado com sucesso!`);
         location.reload(); // Atualiza a página após a atualização do pedido
